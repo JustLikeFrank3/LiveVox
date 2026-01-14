@@ -5,7 +5,7 @@ import { Slider } from '@/components/ui/slider'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Microphone, MicrophoneSlash, SpeakerHigh, Warning, Headphones } from '@phosphor-icons/react'
+import { Microphone, MicrophoneSlash, SpeakerHigh, Warning, Headphones, Lightning } from '@phosphor-icons/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useKV } from '@github/spark/hooks'
 import AudioLevelMeter from '@/components/AudioLevelMeter'
@@ -24,6 +24,9 @@ function App() {
   const [volumeKV, setVolumeKV] = useKV<number[]>('monitor-volume', [100])
   const volume = volumeKV ?? [100]
   const setVolume = (value: number[]) => setVolumeKV(value)
+  const [boostKV, setBoostKV] = useKV<number[]>('boost-gain', [0])
+  const boost = boostKV ?? [0]
+  const setBoost = (value: number[]) => setBoostKV(value)
   const [permissionState, setPermissionState] = useState<PermissionState>('prompt')
   const [errorMessage, setErrorMessage] = useState('')
   const [audioLevel, setAudioLevel] = useState(0)
@@ -35,6 +38,7 @@ function App() {
   const audioContextRef = useRef<AudioContext | null>(null)
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null)
   const gainNodeRef = useRef<GainNode | null>(null)
+  const boostNodeRef = useRef<GainNode | null>(null)
   const analyserRef = useRef<AnalyserNode | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const animationFrameRef = useRef<number | null>(null)
@@ -127,6 +131,11 @@ function App() {
       gainNode.gain.value = volume[0] / 100
       gainNodeRef.current = gainNode
 
+      const boostNode = audioContext.createGain()
+      const boostMultiplier = 1 + (boost[0] / 100) * 3
+      boostNode.gain.value = boostMultiplier
+      boostNodeRef.current = boostNode
+
       const analyser = audioContext.createAnalyser()
       analyser.fftSize = 256
       analyser.smoothingTimeConstant = 0.3
@@ -139,7 +148,8 @@ function App() {
       compressor.attack.value = 0.003
       compressor.release.value = 0.25
 
-      source.connect(gainNode)
+      source.connect(boostNode)
+      boostNode.connect(gainNode)
       gainNode.connect(compressor)
       compressor.connect(analyser)
       analyser.connect(audioContext.destination)
@@ -176,6 +186,11 @@ function App() {
     if (sourceRef.current) {
       sourceRef.current.disconnect()
       sourceRef.current = null
+    }
+
+    if (boostNodeRef.current) {
+      boostNodeRef.current.disconnect()
+      boostNodeRef.current = null
     }
 
     if (gainNodeRef.current) {
@@ -217,6 +232,13 @@ function App() {
       gainNodeRef.current.gain.value = volume[0] / 100
     }
   }, [volume])
+
+  useEffect(() => {
+    if (boostNodeRef.current) {
+      const boostMultiplier = 1 + (boost[0] / 100) * 3
+      boostNodeRef.current.gain.value = boostMultiplier
+    }
+  }, [boost])
 
   useEffect(() => {
     loadAvailableDevices()
@@ -401,6 +423,35 @@ function App() {
                   </div>
                   <span className="text-sm text-muted-foreground w-12 text-right font-medium">
                     {volume[0]}%
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <Lightning 
+                    className={boost[0] > 0 ? "text-primary" : "text-muted-foreground"} 
+                    size={24} 
+                    weight={boost[0] > 0 ? "fill" : "regular"}
+                  />
+                  <div className="flex-1">
+                    <label className="text-sm font-medium mb-2 block flex items-center gap-2">
+                      Boost Amplification
+                      {boost[0] > 0 && (
+                        <Badge variant="secondary" className="text-xs px-2 py-0">
+                          +{Math.round((boost[0] / 100) * 300)}%
+                        </Badge>
+                      )}
+                    </label>
+                    <Slider
+                      value={boost}
+                      onValueChange={setBoost}
+                      max={100}
+                      step={5}
+                      disabled={!isMonitoring}
+                      className="cursor-pointer"
+                    />
+                  </div>
+                  <span className="text-sm text-muted-foreground w-12 text-right font-medium">
+                    {boost[0]}%
                   </span>
                 </div>
               </div>
