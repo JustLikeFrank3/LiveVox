@@ -21,8 +21,8 @@ type AudioDevice = {
 
 function App() {
   const [isMonitoring, setIsMonitoring] = useState(false)
-  const [volumeKV, setVolumeKV] = useKV<number[]>('monitor-volume', [75])
-  const volume = volumeKV ?? [75]
+  const [volumeKV, setVolumeKV] = useKV<number[]>('monitor-volume', [100])
+  const volume = volumeKV ?? [100]
   const setVolume = (value: number[]) => setVolumeKV(value)
   const [permissionState, setPermissionState] = useState<PermissionState>('prompt')
   const [errorMessage, setErrorMessage] = useState('')
@@ -132,8 +132,16 @@ function App() {
       analyser.smoothingTimeConstant = 0.3
       analyserRef.current = analyser
 
+      const compressor = audioContext.createDynamicsCompressor()
+      compressor.threshold.value = -24
+      compressor.knee.value = 30
+      compressor.ratio.value = 12
+      compressor.attack.value = 0.003
+      compressor.release.value = 0.25
+
       source.connect(gainNode)
-      gainNode.connect(analyser)
+      gainNode.connect(compressor)
+      compressor.connect(analyser)
       analyser.connect(audioContext.destination)
 
       setIsMonitoring(true)
