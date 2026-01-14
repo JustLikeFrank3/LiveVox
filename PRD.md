@@ -3,9 +3,9 @@
 A real-time audio monitoring application that routes microphone input directly to speaker output, enabling users to hear themselves while singing along to music from streaming services.
 
 **Experience Qualities**: 
-1. **Immediate** - Zero perceptible latency between speaking/singing and hearing your voice
+1. **Immediate** - Sub-10ms latency optimized for headphone microphones with real-time latency monitoring
 2. **Transparent** - Clean, natural audio passthrough that doesn't color or distort the voice
-3. **Effortless** - Simple one-button operation without complex audio settings or configurations
+3. **Effortless** - Simple one-button operation with automatic headphone microphone detection
 
 **Complexity Level**: Micro Tool (single-purpose application)
 This is a focused utility that does one thing exceptionally well - enabling audio monitoring. It requires real-time audio processing but maintains simplicity through minimal controls.
@@ -13,11 +13,11 @@ This is a focused utility that does one thing exceptionally well - enabling audi
 ## Essential Features
 
 ### Audio Monitoring Toggle
-- **Functionality**: Activates/deactivates microphone-to-speaker passthrough using Web Audio API
-- **Purpose**: Allows users to hear themselves in real-time while music plays from other applications
+- **Functionality**: Activates/deactivates microphone-to-speaker passthrough using Web Audio API with optimized low-latency settings
+- **Purpose**: Allows users to hear themselves in real-time while music plays from other applications, automatically prioritizing headphone microphones
 - **Trigger**: User clicks the main toggle button
-- **Progression**: Click button → Request microphone permission (if needed) → Activate audio stream → Monitor input through output → Visual feedback of active state
-- **Success criteria**: User can hear their own voice through speakers with imperceptible latency (<20ms), audio continues until manually stopped
+- **Progression**: Click button → Request microphone permission (if needed) → Detect headphone microphone → Activate audio stream with 48kHz sample rate → Monitor input through output → Display device and latency info → Visual feedback of active state
+- **Success criteria**: User can hear their own voice through speakers with <10ms latency when using headphones, audio continues until manually stopped, headphone mic is automatically selected when available
 
 ### Volume Control
 - **Functionality**: Adjusts the gain of the microphone input to prevent feedback or allow comfortable monitoring levels
@@ -27,21 +27,30 @@ This is a focused utility that does one thing exceptionally well - enabling audi
 - **Success criteria**: Volume changes apply instantly without clicks/pops, range from muted to full input level
 
 ### Visual Audio Level Indicator
-- **Functionality**: Real-time visualization of microphone input levels
+- **Functionality**: Real-time visualization of microphone input levels with waveform display and level meter
 - **Purpose**: Provides visual confirmation that audio is being captured and helps users optimize their distance from the mic
 - **Trigger**: Automatically displays when monitoring is active
-- **Progression**: Audio input detected → Analyze amplitude → Update visual meter → Continuous real-time updates
+- **Progression**: Audio input detected → Analyze amplitude → Update visual meter and waveform → Continuous real-time updates
 - **Success criteria**: Meter responds to voice input within 16ms (60fps), clearly shows clipping danger zone
+
+### Device and Latency Display
+- **Functionality**: Shows current input device name and measured audio latency in milliseconds
+- **Purpose**: Confirms headphone mic is being used and provides transparency about audio delay
+- **Trigger**: Automatically displays when monitoring starts
+- **Progression**: Monitoring activated → Detect device → Measure AudioContext latency → Display badges with device name and latency value
+- **Success criteria**: Correct device name displayed, latency measurement accurate within 1ms, color-coded badges (green <10ms, yellow <20ms, orange ≥20ms)
 
 ## Edge Case Handling
 
 - **No microphone permission**: Display clear message explaining why permission is needed, with retry button
 - **No microphone detected**: Show helpful error message suggesting checking device connections
+- **No headphone mic found**: Falls back to default microphone automatically and displays the selected device
 - **Audio feedback loop**: Provide warning about using headphones, disable monitoring if dangerous levels detected
 - **Browser compatibility**: Detect and display message if Web Audio API is not supported
-- **Multiple audio devices**: Use system default microphone automatically, no device selection needed for simplicity
+- **Multiple audio devices**: Prioritize headphone/headset/bluetooth microphones, show which device is being used
 - **Background tab**: Continue monitoring even when tab is not focused
 - **Microphone already in use**: Handle gracefully with error message about closing other apps using the mic
+- **High latency detection**: Visual warning if latency exceeds 20ms
 
 ## Design Direction
 
@@ -99,6 +108,7 @@ Animations should feel responsive and purposeful, like physical studio equipment
   - MicrophoneSlash icon for muted state
   - SpeakerHigh icon for volume control
   - Warning icon for error/feedback alerts
+  - Headphones icon for device indicator badge
   
 - **Spacing**: 
   - Main container: p-8 for breathing room

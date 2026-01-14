@@ -3,7 +3,8 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Microphone, MicrophoneSlash, SpeakerHigh, Warning } from '@phosphor-icons/react'
+import { Badge } from '@/components/ui/badge'
+import { Microphone, MicrophoneSlash, SpeakerHigh, Warning, Headphones } from '@phosphor-icons/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useKV } from '@github/spark/hooks'
 import AudioLevelMeter from '@/components/AudioLevelMeter'
@@ -19,6 +20,8 @@ function App() {
   const [permissionState, setPermissionState] = useState<PermissionState>('prompt')
   const [errorMessage, setErrorMessage] = useState('')
   const [audioLevel, setAudioLevel] = useState(0)
+  const [currentDevice, setCurrentDevice] = useState<string>('')
+  const [latency, setLatency] = useState<number>(0)
 
   const audioContextRef = useRef<AudioContext | null>(null)
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null)
@@ -46,18 +49,46 @@ function App() {
 
   const startMonitoring = async () => {
     try {
+      const devices = await navigator.mediaDevices.enumerateDevices()
+      const audioInputs = devices.filter(device => device.kind === 'audioinput')
+      
+      const headphoneMic = audioInputs.find(device => 
+        device.label.toLowerCase().includes('headphone') ||
+        device.label.toLowerCase().includes('headset') ||
+        device.label.toLowerCase().includes('airpods') ||
+        device.label.toLowerCase().includes('earbud') ||
+        device.label.toLowerCase().includes('bluetooth')
+      )
+
+      const selectedDevice = headphoneMic || audioInputs[0]
+      if (selectedDevice) {
+        setCurrentDevice(selectedDevice.label || 'Default Microphone')
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: {
+          deviceId: selectedDevice ? { exact: selectedDevice.deviceId } : undefined,
           echoCancellation: false,
           noiseSuppression: false,
-          autoGainControl: false
+          autoGainControl: false,
+          sampleRate: 48000,
+          sampleSize: 16,
+          channelCount: 1
         } 
       })
       
       streamRef.current = stream
       
-      const audioContext = new AudioContext()
+      const audioContext = new AudioContext({
+        latencyHint: 'interactive',
+        sampleRate: 48000
+      })
       audioContextRef.current = audioContext
+
+      const baseLatency = audioContext.baseLatency || 0
+      const outputLatency = audioContext.outputLatency || 0
+      const totalLatency = (baseLatency + outputLatency) * 1000
+      setLatency(Math.round(totalLatency * 10) / 10)
 
       const source = audioContext.createMediaStreamSource(stream)
       sourceRef.current = source
@@ -67,13 +98,13 @@ function App() {
       gainNodeRef.current = gainNode
 
       const analyser = audioContext.createAnalyser()
-      analyser.fftSize = 2048
-      analyser.smoothingTimeConstant = 0.8
+      analyser.fftSize = 256
+      analyser.smoothingTimeConstant = 0.3
       analyserRef.current = analyser
 
-      source.connect(analyser)
-      analyser.connect(gainNode)
-      gainNode.connect(audioContext.destination)
+      source.connect(gainNode)
+      gainNode.connect(analyser)
+      analyser.connect(audioContext.destination)
 
       setIsMonitoring(true)
       setPermissionState('granted')
@@ -131,6 +162,8 @@ function App() {
 
     setIsMonitoring(false)
     setAudioLevel(0)
+    setCurrentDevice('')
+    setLatency(0)
   }
 
   const toggleMonitoring = () => {
@@ -177,6 +210,28 @@ function App() {
                 <p className="text-sm text-muted-foreground tracking-wide uppercase">
                   Real-time voice passthrough
                 </p>
+                {isMonitoring && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-4 flex flex-col gap-2 items-center"
+                  >
+                    <Badge variant="outline" className="flex items-center gap-2 px-3 py-1">
+                      <Headphones size={14} className="text-primary" weight="fill" />
+                      <span className="text-xs">{currentDevice}</span>
+                    </Badge>
+                    <Badge 
+                      variant="secondary" 
+                      className={`text-xs font-mono ${
+                        latency < 10 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
+                        latency < 20 ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
+                        'bg-orange-500/20 text-orange-400 border-orange-500/30'
+                      }`}
+                    >
+                      {latency}ms latency
+                    </Badge>
+                  </motion.div>
+                )}
               </div>
 
               <AnimatePresence>
