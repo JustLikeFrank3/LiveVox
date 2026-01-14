@@ -19,6 +19,13 @@ This is a focused utility that does one thing exceptionally well - enabling audi
 - **Progression**: Click button → Request microphone permission (if needed) → Detect headphone microphone → Activate audio stream with 48kHz sample rate → Monitor input through output → Display device and latency info → Visual feedback of active state
 - **Success criteria**: User can hear their own voice through speakers with <10ms latency when using headphones, audio continues until manually stopped, headphone mic is automatically selected when available
 
+### Microphone Device Selector
+- **Functionality**: Dropdown selector that lists all available audio input devices and allows manual selection
+- **Purpose**: Gives users control to choose specific microphones when multiple devices are connected or automatic detection selects the wrong device
+- **Trigger**: User opens device selector dropdown
+- **Progression**: Load available devices → Display list with device names → User selects device → If monitoring is active, restart stream with new device → Update current device badge
+- **Success criteria**: All connected audio input devices appear in list with readable names, selected device persists between sessions, switching devices while monitoring seamlessly transitions to new input
+
 ### Volume Control
 - **Functionality**: Adjusts the gain of the microphone input to prevent feedback or allow comfortable monitoring levels
 - **Purpose**: Prevents audio feedback loops and allows users to balance their voice against music
@@ -45,6 +52,7 @@ This is a focused utility that does one thing exceptionally well - enabling audi
 - **No microphone permission**: Display clear message explaining why permission is needed, with retry button
 - **No microphone detected**: Show helpful error message suggesting checking device connections
 - **No headphone mic found**: Falls back to default microphone automatically and displays the selected device
+- **Multiple audio devices**: Shows all available devices in selector, prioritizes headphone/headset/bluetooth microphones as default, persists user's manual selection
 - **Audio feedback loop**: Provide warning about using headphones, disable monitoring if dangerous levels detected
 - **Browser compatibility**: Detect and display message if Web Audio API is not supported
 - **Multiple audio devices**: Prioritize headphone/headset/bluetooth microphones, show which device is being used
@@ -89,6 +97,7 @@ Animations should feel responsive and purposeful, like physical studio equipment
   - Button (shadcn) - Main monitoring toggle, modified with larger size and prominent active state
   - Switch (shadcn) - Alternative for monitoring toggle, styled to feel like hardware power switch
   - Slider (shadcn) - Volume control, customized with larger thumb for precise control
+  - Select (shadcn) - Microphone device selector for choosing input device
   - Card (shadcn) - Container for the main interface with subtle elevation
   - Progress (shadcn) - Audio level meter, customized with gradient to show safe/warning/danger zones
   - Alert (shadcn) - For permission requests and error messages

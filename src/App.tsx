@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Microphone, MicrophoneSlash, SpeakerHigh, Warning, Headphones } from '@phosphor-icons/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useKV } from '@github/spark/hooks'
@@ -11,6 +12,12 @@ import AudioLevelMeter from '@/components/AudioLevelMeter'
 import Waveform from '@/components/Waveform'
 
 type PermissionState = 'prompt' | 'granted' | 'denied' | 'error'
+
+type AudioDevice = {
+  deviceId: string
+  label: string
+  kind: string
+}
 
 function App() {
   const [isMonitoring, setIsMonitoring] = useState(false)
@@ -22,6 +29,8 @@ function App() {
   const [audioLevel, setAudioLevel] = useState(0)
   const [currentDevice, setCurrentDevice] = useState<string>('')
   const [latency, setLatency] = useState<number>(0)
+  const [availableDevices, setAvailableDevices] = useState<AudioDevice[]>([])
+  const [selectedDeviceId, setSelectedDeviceId] = useKV<string>('selected-device-id', '')
 
   const audioContextRef = useRef<AudioContext | null>(null)
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null)
@@ -47,27 +56,44 @@ function App() {
     animationFrameRef.current = requestAnimationFrame(updateAudioLevel)
   }
 
-  const startMonitoring = async () => {
+  const loadAvailableDevices = async () => {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices()
       const audioInputs = devices.filter(device => device.kind === 'audioinput')
       
-      const headphoneMic = audioInputs.find(device => 
-        device.label.toLowerCase().includes('headphone') ||
-        device.label.toLowerCase().includes('headset') ||
-        device.label.toLowerCase().includes('airpods') ||
-        device.label.toLowerCase().includes('earbud') ||
-        device.label.toLowerCase().includes('bluetooth')
-      )
-
-      const selectedDevice = headphoneMic || audioInputs[0]
-      if (selectedDevice) {
-        setCurrentDevice(selectedDevice.label || 'Default Microphone')
+      const deviceList: AudioDevice[] = audioInputs.map(device => ({
+        deviceId: device.deviceId,
+        label: device.label || `Microphone ${audioInputs.indexOf(device) + 1}`,
+        kind: device.kind
+      }))
+      
+      setAvailableDevices(deviceList)
+      
+      if (deviceList.length > 0 && !selectedDeviceId) {
+        const headphoneMic = deviceList.find(device => 
+          device.label.toLowerCase().includes('headphone') ||
+          device.label.toLowerCase().includes('headset') ||
+          device.label.toLowerCase().includes('airpods') ||
+          device.label.toLowerCase().includes('earbud') ||
+          device.label.toLowerCase().includes('bluetooth')
+        )
+        const defaultDevice = headphoneMic || deviceList[0]
+        setSelectedDeviceId(defaultDevice.deviceId)
       }
+    } catch (err) {
+      console.error('Error enumerating devices:', err)
+    }
+  }
+
+  const startMonitoring = async () => {
+    try {
+      await loadAvailableDevices()
+      
+      const deviceId = selectedDeviceId || undefined
 
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: {
-          deviceId: selectedDevice ? { exact: selectedDevice.deviceId } : undefined,
+          deviceId: deviceId ? { exact: deviceId } : undefined,
           echoCancellation: false,
           noiseSuppression: false,
           autoGainControl: false,
@@ -78,6 +104,10 @@ function App() {
       })
       
       streamRef.current = stream
+      
+      const audioTrack = stream.getAudioTracks()[0]
+      const trackLabel = audioTrack.label || 'Default Microphone'
+      setCurrentDevice(trackLabel)
       
       const audioContext = new AudioContext({
         latencyHint: 'interactive',
@@ -181,10 +211,26 @@ function App() {
   }, [volume])
 
   useEffect(() => {
+    loadAvailableDevices()
+    
+    navigator.mediaDevices.addEventListener('devicechange', loadAvailableDevices)
+    
     return () => {
       stopMonitoring()
+      navigator.mediaDevices.removeEventListener('devicechange', loadAvailableDevices)
     }
   }, [])
+  
+  const handleDeviceChange = async (deviceId: string) => {
+    setSelectedDeviceId(deviceId)
+    
+    if (isMonitoring) {
+      stopMonitoring()
+      setTimeout(() => {
+        startMonitoring()
+      }, 100)
+    }
+  }
 
   const retryPermission = () => {
     setPermissionState('prompt')
@@ -307,7 +353,29 @@ function App() {
                 </motion.div>
               )}
 
-              <div className="space-y-4">
+              <div className="space-y-6">
+                <div>
+                  <label className="text-sm font-medium mb-3 block">
+                    Input Device
+                  </label>
+                  <Select 
+                    value={selectedDeviceId || ''} 
+                    onValueChange={handleDeviceChange}
+                    disabled={availableDevices.length === 0}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select microphone..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableDevices.map((device) => (
+                        <SelectItem key={device.deviceId} value={device.deviceId}>
+                          {device.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
                 <div className="flex items-center gap-4">
                   <SpeakerHigh className="text-muted-foreground" size={24} />
                   <div className="flex-1">
