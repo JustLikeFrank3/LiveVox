@@ -495,7 +495,7 @@ function App() {
                     Input Device
                   </label>
                   <Select 
-                    value={selectedDeviceId || (availableDevices.length > 0 ? availableDevices[0].deviceId : 'none')} 
+                    value={selectedDeviceId || (availableDevices.length > 0 ? availableDevices[0].deviceId : '__no_devices__')} 
                     onValueChange={handleDeviceChange}
                     disabled={availableDevices.length === 0}
                   >
@@ -504,7 +504,7 @@ function App() {
                     </SelectTrigger>
                     <SelectContent>
                       {availableDevices.length === 0 ? (
-                        <SelectItem value="none" disabled>
+                        <SelectItem value="__no_devices__" disabled>
                           No microphones found
                         </SelectItem>
                       ) : (
