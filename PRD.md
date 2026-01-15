@@ -54,6 +54,13 @@ This is a focused utility that does one thing exceptionally well - enabling audi
 - **Progression**: Drag slider → Adjust boost gain node in audio graph → Apply amplification multiplier → Immediate volume increase → Visual feedback with percentage badge → Monitor for clipping
 - **Success criteria**: Boost applies instantly without clicks/pops, range from 0% (no boost) to 100% (4x amplification), clearly labeled with actual gain multiplier, compressor prevents harsh distortion, clipping indicator warns if signal is too hot
 
+### Ultra-Low Latency Mode Toggle
+- **Functionality**: Switch between ultra-low latency mode (minimal processing) and balanced mode (with compression and smoothing)
+- **Purpose**: Allows users to prioritize absolute minimum latency over audio processing, or choose balanced quality with protection
+- **Trigger**: User toggles the low latency mode switch
+- **Progression**: Toggle switch → Stop current monitoring → Reconfigure audio context with latency hint of 0 vs 'interactive' → Remove compression and smoothing in low latency mode → Restart monitoring with new settings → Display mode status
+- **Success criteria**: Ultra-low mode uses latencyHint: 0, FFT size of 128, no smoothing, no compression for absolute minimum delay. Balanced mode uses latencyHint: 'interactive', FFT size of 256, smoothing, and dynamic compression for quality. Setting persists between sessions. Seamless transition when monitoring is active.
+
 ## Edge Case Handling
 
 - **No microphone permission**: Display clear message explaining why permission is needed, with retry button
@@ -62,10 +69,11 @@ This is a focused utility that does one thing exceptionally well - enabling audi
 - **Multiple audio devices**: Shows all available devices in selector, prioritizes headphone/headset/bluetooth microphones as default, persists user's manual selection
 - **Audio feedback loop**: Provide warning about using headphones, disable monitoring if dangerous levels detected
 - **Browser compatibility**: Detect and display message if Web Audio API is not supported
-- **Multiple audio devices**: Prioritize headphone/headset/bluetooth microphones, show which device is being used
 - **Background tab**: Continue monitoring even when tab is not focused
 - **Microphone already in use**: Handle gracefully with error message about closing other apps using the mic
 - **High latency detection**: Visual warning if latency exceeds 20ms
+- **Ultra-low latency mode with high boost**: Display warning that compression is bypassed and clipping may occur at high boost levels
+- **Mode switching during monitoring**: Seamlessly stop and restart audio stream with new latency settings
 
 ## Design Direction
 
@@ -102,12 +110,13 @@ Animations should feel responsive and purposeful, like physical studio equipment
 
 - **Components**: 
   - Button (shadcn) - Main monitoring toggle, modified with larger size and prominent active state
-  - Switch (shadcn) - Alternative for monitoring toggle, styled to feel like hardware power switch
-  - Slider (shadcn) - Volume control, customized with larger thumb for precise control
+  - Switch (shadcn) - Ultra-low latency mode toggle, styled to feel like hardware power switch
+  - Slider (shadcn) - Volume and boost controls, customized with larger thumb for precise control
   - Select (shadcn) - Microphone device selector for choosing input device
   - Card (shadcn) - Container for the main interface with subtle elevation
   - Progress (shadcn) - Audio level meter, customized with gradient to show safe/warning/danger zones
   - Alert (shadcn) - For permission requests and error messages
+  - Badge (shadcn) - For device name, latency, boost level, and clipping indicators
   
 - **Customizations**: 
   - Custom audio visualizer component using canvas for real-time level metering
@@ -120,11 +129,13 @@ Animations should feel responsive and purposeful, like physical studio equipment
   - Level meter: Continuous smooth animation responding to audio input
   
 - **Icon Selection**: 
-  - Microphone icon (phosphor) for main toggle when inactive
-  - MicrophoneSlash icon for muted state
+  - Microphone icon (phosphor) for main toggle when active
+  - MicrophoneSlash icon for inactive state
   - SpeakerHigh icon for volume control
-  - Warning icon for error/feedback alerts
+  - Lightning icon for boost amplification control
+  - Warning icon for error/feedback alerts and clipping
   - Headphones icon for device indicator badge
+  - Gauge icon for ultra-low latency mode toggle
   
 - **Spacing**: 
   - Main container: p-8 for breathing room

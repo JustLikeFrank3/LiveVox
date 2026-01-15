@@ -3,9 +3,10 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Microphone, MicrophoneSlash, SpeakerHigh, Warning, Headphones, Lightning } from '@phosphor-icons/react'
+import { Microphone, MicrophoneSlash, SpeakerHigh, Warning, Headphones, Lightning, Gauge } from '@phosphor-icons/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useKV } from '@github/spark/hooks'
 import AudioLevelMeter from '@/components/AudioLevelMeter'
@@ -35,6 +36,7 @@ function App() {
   const [availableDevices, setAvailableDevices] = useState<AudioDevice[]>([])
   const [selectedDeviceId, setSelectedDeviceId] = useKV<string>('selected-device-id', '')
   const [isClipping, setIsClipping] = useState(false)
+  const [lowLatencyMode, setLowLatencyMode] = useKV<boolean>('low-latency-mode', true)
   const clippingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const audioContextRef = useRef<AudioContext | null>(null)
@@ -109,16 +111,27 @@ function App() {
       
       const deviceId = selectedDeviceId || undefined
 
+      const audioConstraints = lowLatencyMode ? {
+        deviceId: deviceId ? { exact: deviceId } : undefined,
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false,
+        sampleRate: 48000,
+        sampleSize: 16,
+        channelCount: 1,
+        latency: 0
+      } : {
+        deviceId: deviceId ? { exact: deviceId } : undefined,
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false,
+        sampleRate: 48000,
+        sampleSize: 16,
+        channelCount: 1
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({ 
-        audio: {
-          deviceId: deviceId ? { exact: deviceId } : undefined,
-          echoCancellation: false,
-          noiseSuppression: false,
-          autoGainControl: false,
-          sampleRate: 48000,
-          sampleSize: 16,
-          channelCount: 1
-        } 
+        audio: audioConstraints
       })
       
       streamRef.current = stream
@@ -128,7 +141,7 @@ function App() {
       setCurrentDevice(trackLabel)
       
       const audioContext = new AudioContext({
-        latencyHint: 'interactive',
+        latencyHint: lowLatencyMode ? 0 : 'interactive',
         sampleRate: 48000
       })
       audioContextRef.current = audioContext
@@ -137,6 +150,14 @@ function App() {
       const outputLatency = audioContext.outputLatency || 0
       const totalLatency = (baseLatency + outputLatency) * 1000
       setLatency(Math.round(totalLatency * 10) / 10)
+
+      if (lowLatencyMode && audioContext.audioWorklet) {
+        try {
+          await audioContext.resume()
+        } catch (e) {
+          console.log('Could not resume audio context:', e)
+        }
+      }
 
       const source = audioContext.createMediaStreamSource(stream)
       sourceRef.current = source
@@ -151,22 +172,29 @@ function App() {
       boostNodeRef.current = boostNode
 
       const analyser = audioContext.createAnalyser()
-      analyser.fftSize = 256
-      analyser.smoothingTimeConstant = 0.3
+      analyser.fftSize = lowLatencyMode ? 128 : 256
+      analyser.smoothingTimeConstant = lowLatencyMode ? 0 : 0.3
       analyserRef.current = analyser
 
-      const compressor = audioContext.createDynamicsCompressor()
-      compressor.threshold.value = -24
-      compressor.knee.value = 30
-      compressor.ratio.value = 12
-      compressor.attack.value = 0.003
-      compressor.release.value = 0.25
+      if (lowLatencyMode) {
+        source.connect(boostNode)
+        boostNode.connect(gainNode)
+        gainNode.connect(analyser)
+        analyser.connect(audioContext.destination)
+      } else {
+        const compressor = audioContext.createDynamicsCompressor()
+        compressor.threshold.value = -24
+        compressor.knee.value = 30
+        compressor.ratio.value = 12
+        compressor.attack.value = 0.003
+        compressor.release.value = 0.25
 
-      source.connect(boostNode)
-      boostNode.connect(gainNode)
-      gainNode.connect(compressor)
-      compressor.connect(analyser)
-      analyser.connect(audioContext.destination)
+        source.connect(boostNode)
+        boostNode.connect(gainNode)
+        gainNode.connect(compressor)
+        compressor.connect(analyser)
+        analyser.connect(audioContext.destination)
+      }
 
       setIsMonitoring(true)
       setPermissionState('granted')
@@ -273,6 +301,18 @@ function App() {
   
   const handleDeviceChange = async (deviceId: string) => {
     setSelectedDeviceId(deviceId)
+    
+    if (isMonitoring) {
+      stopMonitoring()
+      setTimeout(() => {
+        startMonitoring()
+      }, 100)
+    }
+  }
+
+  const toggleLatencyMode = () => {
+    const newMode = !lowLatencyMode
+    setLowLatencyMode(newMode)
     
     if (isMonitoring) {
       stopMonitoring()
@@ -424,6 +464,28 @@ function App() {
               )}
 
               <div className="space-y-6">
+                <div className="flex items-center justify-between p-4 bg-card/50 rounded-lg border border-border">
+                  <div className="flex items-center gap-3">
+                    <Gauge 
+                      className={lowLatencyMode ? "text-primary" : "text-muted-foreground"} 
+                      size={20} 
+                      weight={lowLatencyMode ? "fill" : "regular"}
+                    />
+                    <div>
+                      <label className="text-sm font-medium block">
+                        Ultra-Low Latency Mode
+                      </label>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {lowLatencyMode ? 'Minimum delay, no compression' : 'Balanced quality with compression'}
+                      </p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={lowLatencyMode}
+                    onCheckedChange={toggleLatencyMode}
+                  />
+                </div>
+
                 <div>
                   <label className="text-sm font-medium mb-3 block">
                     Input Device
@@ -508,13 +570,21 @@ function App() {
                 </div>
               )}
 
-              <div className="mt-8 pt-6 border-t border-border">
+              <div className="mt-8 pt-6 border-t border-border space-y-3">
                 <div className="flex items-start gap-2 text-xs text-muted-foreground">
                   <Warning size={16} className="flex-shrink-0 mt-0.5" />
                   <p className="leading-relaxed">
                     Use headphones to prevent audio feedback. Keep volume low initially and adjust as needed.
                   </p>
                 </div>
+                {lowLatencyMode && (
+                  <div className="flex items-start gap-2 text-xs text-primary/80">
+                    <Gauge size={16} className="flex-shrink-0 mt-0.5" weight="fill" />
+                    <p className="leading-relaxed">
+                      Ultra-low latency mode bypasses compression for minimal delay. May allow clipping at high boost levels.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </Card>
