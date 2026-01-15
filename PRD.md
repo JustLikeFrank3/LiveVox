@@ -61,6 +61,13 @@ This is a focused utility that does one thing exceptionally well - enabling audi
 - **Progression**: Toggle switch → Stop current monitoring → Reconfigure audio context with latency hint of 0 vs 'interactive' → Remove compression and smoothing in low latency mode → Restart monitoring with new settings → Display mode status
 - **Success criteria**: Ultra-low mode uses latencyHint: 0, FFT size of 128, no smoothing, no compression for absolute minimum delay. Balanced mode uses latencyHint: 'interactive', FFT size of 256, smoothing, and dynamic compression for quality. Setting persists between sessions. Seamless transition when monitoring is active.
 
+### Pitch Detection and Tuning Indicator
+- **Functionality**: Real-time pitch detection using autocorrelation algorithm that identifies the musical note being sung and displays how close it is to being in tune
+- **Purpose**: Helps singers practice pitch accuracy and stay in tune by providing immediate visual feedback on their vocal pitch
+- **Trigger**: Automatically displays when monitoring is active
+- **Progression**: Audio input detected → Apply autocorrelation to detect fundamental frequency → Map frequency to nearest musical note → Calculate cents deviation from perfect pitch → Display note name, octave, and tuning meter → Show "In Tune" badge when within ±15 cents → Animate tuning needle position → Continuous real-time updates
+- **Success criteria**: Accurately detects pitch for frequencies 60Hz-1000Hz (roughly C2 to C6), responds within 100ms, displays correct note names with octave numbers, shows cents deviation with visual meter, "In Tune" badge appears when within ±15 cents, tuning needle smoothly animates left (flat) or right (sharp), gracefully handles periods of silence
+
 ## Edge Case Handling
 
 - **No microphone permission**: Display clear message explaining why permission is needed, with retry button
@@ -74,6 +81,9 @@ This is a focused utility that does one thing exceptionally well - enabling audi
 - **High latency detection**: Visual warning if latency exceeds 20ms
 - **Ultra-low latency mode with high boost**: Display warning that compression is bypassed and clipping may occur at high boost levels
 - **Mode switching during monitoring**: Seamlessly stop and restart audio stream with new latency settings
+- **No vocal input during pitch detection**: Display "Sing or play a note" placeholder message when no pitch is detected
+- **Pitch outside detection range**: Gracefully ignore frequencies below 60Hz or above 1000Hz without displaying incorrect notes
+- **Unstable pitch (vibrato, pitch bends)**: Autocorrelation handles natural voice variations, updates smoothly without jitter
 
 ## Design Direction
 
@@ -120,8 +130,12 @@ Animations should feel responsive and purposeful, like physical studio equipment
   
 - **Customizations**: 
   - Custom audio visualizer component using canvas for real-time level metering
+  - Custom waveform component for real-time audio visualization
+  - Custom pitch indicator component with autocorrelation-based pitch detection
   - Gradient-based progress bar with green (safe) → yellow (optimal) → red (clipping) zones
   - Pulsing ring animation around active monitoring button
+  - Animated tuning meter with needle that moves left (flat) or right (sharp)
+  - Color-coded tuning feedback: emerald for in tune, yellow for sharp, blue for flat
   
 - **States**: 
   - Toggle button: Inactive (muted colors) → Hover (subtle glow) → Active (bright accent color with pulse animation) → Disabled (grayed out)
@@ -136,6 +150,7 @@ Animations should feel responsive and purposeful, like physical studio equipment
   - Warning icon for error/feedback alerts and clipping
   - Headphones icon for device indicator badge
   - Gauge icon for ultra-low latency mode toggle
+  - MusicNote icon for pitch detection section
   
 - **Spacing**: 
   - Main container: p-8 for breathing room
