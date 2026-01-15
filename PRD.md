@@ -34,11 +34,11 @@ This is a focused utility that does one thing exceptionally well - enabling audi
 - **Success criteria**: Volume changes apply instantly without clicks/pops, range from muted to full input level
 
 ### Visual Audio Level Indicator
-- **Functionality**: Real-time visualization of microphone input levels with waveform display and level meter
-- **Purpose**: Provides visual confirmation that audio is being captured and helps users optimize their distance from the mic
+- **Functionality**: Real-time visualization of microphone input levels with waveform display, level meter, and clipping detection
+- **Purpose**: Provides visual confirmation that audio is being captured, helps users optimize their distance from the mic, and alerts when signal is too hot
 - **Trigger**: Automatically displays when monitoring is active
-- **Progression**: Audio input detected → Analyze amplitude → Update visual meter and waveform → Continuous real-time updates
-- **Success criteria**: Meter responds to voice input within 16ms (60fps), clearly shows clipping danger zone
+- **Progression**: Audio input detected → Analyze amplitude and peak values → Update visual meter and waveform → Detect clipping threshold (>95%) → Display clipping warning badge and pulsing meter → Continuous real-time updates
+- **Success criteria**: Meter responds to voice input within 16ms (60fps), clearly shows clipping danger zone, prominent red "CLIPPING" badge appears when audio peaks exceed 95%, clipping indicator persists for 1 second after last clip event
 
 ### Device and Latency Display
 - **Functionality**: Shows current input device name and measured audio latency in milliseconds
@@ -46,6 +46,13 @@ This is a focused utility that does one thing exceptionally well - enabling audi
 - **Trigger**: Automatically displays when monitoring starts
 - **Progression**: Monitoring activated → Detect device → Measure AudioContext latency → Display badges with device name and latency value
 - **Success criteria**: Correct device name displayed, latency measurement accurate within 1ms, color-coded badges (green <10ms, yellow <20ms, orange ≥20ms)
+
+### Boost/Amplification Control
+- **Functionality**: Provides additional gain boost (up to 300%) for users who need extra volume beyond standard monitoring levels
+- **Purpose**: Enables users with quiet microphones or soft voices to hear themselves clearly without maxing out system volume
+- **Trigger**: User adjusts boost slider while monitoring is active
+- **Progression**: Drag slider → Adjust boost gain node in audio graph → Apply amplification multiplier → Immediate volume increase → Visual feedback with percentage badge → Monitor for clipping
+- **Success criteria**: Boost applies instantly without clicks/pops, range from 0% (no boost) to 100% (4x amplification), clearly labeled with actual gain multiplier, compressor prevents harsh distortion, clipping indicator warns if signal is too hot
 
 ## Edge Case Handling
 

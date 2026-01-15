@@ -34,6 +34,8 @@ function App() {
   const [latency, setLatency] = useState<number>(0)
   const [availableDevices, setAvailableDevices] = useState<AudioDevice[]>([])
   const [selectedDeviceId, setSelectedDeviceId] = useKV<string>('selected-device-id', '')
+  const [isClipping, setIsClipping] = useState(false)
+  const clippingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const audioContextRef = useRef<AudioContext | null>(null)
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null)
@@ -50,12 +52,24 @@ function App() {
     analyserRef.current.getByteTimeDomainData(dataArray)
 
     let sum = 0
+    let maxValue = 0
     for (let i = 0; i < dataArray.length; i++) {
       const normalized = (dataArray[i] - 128) / 128
       sum += normalized * normalized
+      maxValue = Math.max(maxValue, Math.abs(normalized))
     }
     const rms = Math.sqrt(sum / dataArray.length)
     setAudioLevel(rms)
+
+    if (maxValue > 0.95) {
+      setIsClipping(true)
+      if (clippingTimeoutRef.current) {
+        clearTimeout(clippingTimeoutRef.current)
+      }
+      clippingTimeoutRef.current = setTimeout(() => {
+        setIsClipping(false)
+      }, 1000)
+    }
 
     animationFrameRef.current = requestAnimationFrame(updateAudioLevel)
   }
@@ -183,6 +197,11 @@ function App() {
       animationFrameRef.current = null
     }
 
+    if (clippingTimeoutRef.current) {
+      clearTimeout(clippingTimeoutRef.current)
+      clippingTimeoutRef.current = null
+    }
+
     if (sourceRef.current) {
       sourceRef.current.disconnect()
       sourceRef.current = null
@@ -217,6 +236,7 @@ function App() {
     setAudioLevel(0)
     setCurrentDevice('')
     setLatency(0)
+    setIsClipping(false)
   }
 
   const toggleMonitoring = () => {
@@ -296,16 +316,36 @@ function App() {
                       <Headphones size={14} className="text-primary" weight="fill" />
                       <span className="text-xs">{currentDevice}</span>
                     </Badge>
-                    <Badge 
-                      variant="secondary" 
-                      className={`text-xs font-mono ${
-                        latency < 10 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
-                        latency < 20 ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
-                        'bg-orange-500/20 text-orange-400 border-orange-500/30'
-                      }`}
-                    >
-                      {latency}ms latency
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge 
+                        variant="secondary" 
+                        className={`text-xs font-mono ${
+                          latency < 10 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' :
+                          latency < 20 ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
+                          'bg-orange-500/20 text-orange-400 border-orange-500/30'
+                        }`}
+                      >
+                        {latency}ms latency
+                      </Badge>
+                      <AnimatePresence>
+                        {isClipping && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            transition={{ duration: 0.15 }}
+                          >
+                            <Badge 
+                              variant="destructive" 
+                              className="flex items-center gap-1.5 px-2.5 py-1 bg-destructive/90 animate-pulse"
+                            >
+                              <Warning size={14} weight="fill" />
+                              <span className="text-xs font-semibold">CLIPPING</span>
+                            </Badge>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   </motion.div>
                 )}
               </div>
