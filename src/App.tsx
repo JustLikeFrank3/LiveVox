@@ -89,16 +89,18 @@ function App() {
       
       setAvailableDevices(deviceList)
       
-      if (deviceList.length > 0 && !selectedDeviceId) {
-        const headphoneMic = deviceList.find(device => 
-          device.label.toLowerCase().includes('headphone') ||
-          device.label.toLowerCase().includes('headset') ||
-          device.label.toLowerCase().includes('airpods') ||
-          device.label.toLowerCase().includes('earbud') ||
-          device.label.toLowerCase().includes('bluetooth')
-        )
-        const defaultDevice = headphoneMic || deviceList[0]
-        setSelectedDeviceId(defaultDevice.deviceId)
+      if (deviceList.length > 0) {
+        if (!selectedDeviceId || !deviceList.find(d => d.deviceId === selectedDeviceId)) {
+          const headphoneMic = deviceList.find(device => 
+            device.label.toLowerCase().includes('headphone') ||
+            device.label.toLowerCase().includes('headset') ||
+            device.label.toLowerCase().includes('airpods') ||
+            device.label.toLowerCase().includes('earbud') ||
+            device.label.toLowerCase().includes('bluetooth')
+          )
+          const defaultDevice = headphoneMic || deviceList[0]
+          setSelectedDeviceId(defaultDevice.deviceId)
+        }
       }
     } catch (err) {
       console.error('Error enumerating devices:', err)
@@ -491,7 +493,7 @@ function App() {
                     Input Device
                   </label>
                   <Select 
-                    value={selectedDeviceId || ''} 
+                    value={selectedDeviceId || (availableDevices.length > 0 ? availableDevices[0].deviceId : 'none')} 
                     onValueChange={handleDeviceChange}
                     disabled={availableDevices.length === 0}
                   >
@@ -499,11 +501,17 @@ function App() {
                       <SelectValue placeholder="Select microphone..." />
                     </SelectTrigger>
                     <SelectContent>
-                      {availableDevices.map((device) => (
-                        <SelectItem key={device.deviceId} value={device.deviceId}>
-                          {device.label}
+                      {availableDevices.length === 0 ? (
+                        <SelectItem value="none" disabled>
+                          No microphones found
                         </SelectItem>
-                      ))}
+                      ) : (
+                        availableDevices.map((device) => (
+                          <SelectItem key={device.deviceId} value={device.deviceId}>
+                            {device.label}
+                          </SelectItem>
+                        ))
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
