@@ -1,4 +1,4 @@
-# Planning Guide
+# LiveVox - Planning Guide
 
 A real-time audio monitoring application that routes microphone input directly to speaker output, enabling users to hear themselves while singing along to music from streaming services.
 

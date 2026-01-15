@@ -1,4 +1,4 @@
-# 🎤 Audio Monitor
+# 🎤 LiveVox
 
 <div align="center">
 
@@ -21,7 +21,7 @@
 
 <div align="center">
 
-![Audio Monitor Interface](./screenshots/audio-monitor-main.png)
+![LiveVox Interface](./screenshots/audio-monitor-main.png)
 *Main interface with real-time waveform, pitch detection, and audio controls*
 
 ![Pitch Indicator Demo](./screenshots/pitch-indicator.gif)
@@ -252,7 +252,7 @@ If you see the **red CLIPPING warning**:
 
 ### Live Deployment
 
-This Audio Monitor app is live and ready to share! 🎉
+This LiveVox app is live and ready to share! 🎉
 
 **🔗 Live URL:** https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/
 
@@ -279,7 +279,7 @@ To let others see and fork your code:
 4. Others can now view, fork, star, and contribute!
 
 #### 🌍 Custom Domain (Optional)
-You can add a custom domain through GitHub Spark settings for a branded URL like `audio-monitor.yourdomain.com`
+You can add a custom domain through GitHub Spark settings for a branded URL like `livevox.yourdomain.com`
 
 ---
 

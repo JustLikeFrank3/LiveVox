@@ -345,7 +345,7 @@ function App() {
             <div className="relative z-10">
               <div className="text-center mb-8">
                 <h1 className="text-3xl font-bold tracking-tight mb-2">
-                  Audio Monitor
+                  LiveVox
                 </h1>
                 <p className="text-sm text-muted-foreground tracking-wide uppercase">
                   Real-time voice passthrough
