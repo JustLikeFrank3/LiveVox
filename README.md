@@ -262,6 +262,19 @@ This LiveVox app is live and ready to share! 🎉
 - ✅ Global CDN delivery
 - ✅ Zero configuration required
 - ✅ Works on any device with a modern browser
+- ✅ Beautiful social media preview cards (Open Graph & Twitter Cards)
+
+### Social Media Sharing
+
+When you share the LiveVox URL on social media platforms (Twitter, Facebook, LinkedIn, Discord, Slack, etc.), a rich preview card will automatically appear with:
+- 🎨 Custom branded preview image
+- 📝 App title and description
+- 🎤 Visual elements showing audio waveform and key features
+
+The preview image is optimized for:
+- **Facebook/LinkedIn:** 1200×630px
+- **Twitter Cards:** Large image format
+- **Discord/Slack:** Rich embed previews
 
 ### Sharing Options
 

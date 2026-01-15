@@ -1,0 +1,76 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="oklch(0.98 0.005 140)"/>
+  
+  <defs>
+    <radialGradient id="bg-gradient" cx="50%" cy="50%" r="80%">
+      <stop offset="0%" style="stop-color:oklch(0.45 0.15 120);stop-opacity:0.15" />
+      <stop offset="100%" style="stop-color:oklch(0.35 0.18 140);stop-opacity:0" />
+    </radialGradient>
+    
+    <linearGradient id="wave-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:oklch(0.35 0.18 140)" />
+      <stop offset="50%" style="stop-color:oklch(0.45 0.15 120)" />
+      <stop offset="100%" style="stop-color:oklch(0.35 0.18 140)" />
+    </linearGradient>
+  </defs>
+  
+  <ellipse cx="600" cy="315" rx="800" ry="400" fill="url(#bg-gradient)"/>
+  
+  <g opacity="0.1">
+    <rect x="150" y="250" width="900" height="2" fill="oklch(0.35 0.18 140)"/>
+    <rect x="150" y="280" width="900" height="2" fill="oklch(0.35 0.18 140)"/>
+    <rect x="150" y="310" width="900" height="2" fill="oklch(0.35 0.18 140)"/>
+    <rect x="150" y="340" width="900" height="2" fill="oklch(0.35 0.18 140)"/>
+    <rect x="150" y="370" width="900" height="2" fill="oklch(0.35 0.18 140)"/>
+  </g>
+  
+  <path d="M 150 315 Q 250 280 350 295 T 550 310 T 750 300 T 950 315 T 1050 305" 
+        stroke="url(#wave-gradient)" 
+        stroke-width="4" 
+        fill="none" 
+        stroke-linecap="round"/>
+  
+  <path d="M 150 315 Q 250 290 350 305 T 550 320 T 750 310 T 950 325 T 1050 315" 
+        stroke="url(#wave-gradient)" 
+        stroke-width="3" 
+        fill="none" 
+        stroke-linecap="round"
+        opacity="0.6"/>
+  
+  <circle cx="600" cy="315" r="80" fill="oklch(0.35 0.18 140)" opacity="0.15"/>
+  <circle cx="600" cy="315" r="60" fill="oklch(0.35 0.18 140)"/>
+  
+  <g transform="translate(600, 315)">
+    <path d="M -20 -25 L -20 25 M -10 -20 L -10 20 M 0 -30 L 0 30 M 10 -20 L 10 20 M 20 -25 L 20 25" 
+          stroke="oklch(0.98 0.005 140)" 
+          stroke-width="4" 
+          stroke-linecap="round"/>
+  </g>
+  
+  <text x="600" y="480" 
+        font-family="IBM Plex Sans, sans-serif" 
+        font-size="72" 
+        font-weight="700" 
+        fill="oklch(0.20 0.12 140)" 
+        text-anchor="middle">LiveVox</text>
+  
+  <text x="600" y="520" 
+        font-family="IBM Plex Sans, sans-serif" 
+        font-size="24" 
+        font-weight="400" 
+        fill="oklch(0.45 0.08 140)" 
+        text-anchor="middle" 
+        letter-spacing="2">REAL-TIME VOICE MONITORING</text>
+  
+  <g transform="translate(300, 90)">
+    <rect x="0" y="0" width="200" height="80" rx="8" fill="oklch(0.96 0.008 140)" stroke="oklch(0.85 0.05 140)" stroke-width="2"/>
+    <text x="100" y="30" font-family="IBM Plex Sans, sans-serif" font-size="14" font-weight="600" fill="oklch(0.35 0.18 140)" text-anchor="middle">Ultra-Low Latency</text>
+    <text x="100" y="55" font-family="Fira Code, monospace" font-size="20" font-weight="700" fill="oklch(0.45 0.15 120)" text-anchor="middle">&lt; 10ms</text>
+  </g>
+  
+  <g transform="translate(700, 90)">
+    <rect x="0" y="0" width="200" height="80" rx="8" fill="oklch(0.96 0.008 140)" stroke="oklch(0.85 0.05 140)" stroke-width="2"/>
+    <text x="100" y="30" font-family="IBM Plex Sans, sans-serif" font-size="14" font-weight="600" fill="oklch(0.35 0.18 140)" text-anchor="middle">Visual Feedback</text>
+    <text x="100" y="55" font-family="IBM Plex Sans, sans-serif" font-size="16" font-weight="400" fill="oklch(0.45 0.08 140)" text-anchor="middle">Waveform + Spectrum</text>
+  </g>
+</svg>
