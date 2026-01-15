@@ -2,34 +2,39 @@
 
 <div align="center">
 
-**Real-time voice passthrough with ultra-low latency**
+![LiveVox - Professional Voice Monitoring](./public/og-image.svg)
 
-*Perfect for singers, podcasters, musicians, and anyone who needs to monitor their voice through headphones*
+**Professional real-time voice monitoring in your browser**
+
+*Ultra-low latency audio passthrough with pitch detection, waveform visualization, and dynamic processing*
 
 ### 🌐 [**Try it Live!**](https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/)
 
 [![Built with React](https://img.shields.io/badge/React-19.2-61dafb?style=flat&logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Web Audio API](https://img.shields.io/badge/Web%20Audio%20API-enabled-ff6b6b?style=flat)](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+[![Built with GitHub Spark](https://img.shields.io/badge/Built%20with-GitHub%20Spark-purple?style=flat)](https://githubnext.com/projects/github-spark)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
+**Built in ~1 hour with [GitHub Spark](https://githubnext.com/projects/github-spark) 🚀**
 
 </div>
 
 ---
 
-## 📸 Screenshots
+## 🎯 What is LiveVox?
 
-<div align="center">
+LiveVox is a **professional-grade audio monitoring tool** that runs entirely in your web browser. It lets you hear your voice through headphones with **ultra-low latency** (<10ms on supported devices), along with real-time pitch detection, waveform visualization, and dynamic audio processing.
 
-![LiveVox Interface](./screenshots/audio-monitor-main.png)
-*Main interface with real-time waveform, pitch detection, and audio controls*
+Perfect for **singers** practicing pitch accuracy, **podcasters** monitoring audio quality, **musicians** tracking acoustic instruments, or anyone who needs to hear themselves clearly while working with audio.
 
-![Pitch Indicator Demo](./screenshots/pitch-indicator.gif)
-*Live pitch detection helping you stay in tune while singing*
-
-</div>
-
-> **📝 Note:** To replace placeholder screenshots with real ones, see the [screenshots guide](./screenshots/README.md)
+**Key highlights:**
+- 🎤 **Sub-10ms latency** - Feels like direct hardware monitoring
+- 🎵 **Real-time pitch detection** - See exactly what note you're singing
+- 📊 **Live waveform & level meters** - Professional visual feedback
+- ⚡ **Dynamic compression** - Automatic volume leveling and protection
+- 🔧 **Zero installation** - Works instantly in any modern browser
+- 💾 **Persistent settings** - Your preferences save automatically
 
 ---
 
@@ -98,90 +103,70 @@
 
 ### Quick Start
 
-1. **[Open the application](https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/)** in your web browser
-2. **Connect headphones** (important to prevent feedback!)
-3. **Click the microphone button** to start monitoring
-4. **Allow microphone access** when your browser prompts you
-5. **Adjust volume** to a comfortable level
-6. **Start singing or speaking!**
+1. **[Open LiveVox](https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/)** in your browser
+2. **Connect headphones** to prevent feedback
+3. **Click the mic button** and allow access
+4. **Start singing or speaking** - you'll hear yourself instantly!
 
-### Initial Setup
-
-The app will automatically:
-- ✅ Detect and prioritize your headphone microphone
-- ✅ Configure optimal low-latency audio settings
-- ✅ Save your preferences for next time
-- ✅ Show real-time latency measurements
-
-### Recommended Settings
-
-**For Singing/Music:**
-- ✅ Enable **Ultra-Low Latency Mode**
-- 🎧 Use **wired headphones** (Bluetooth adds latency)
-- 🔊 Start with **50-70% volume**
-- ⚡ Use **boost sparingly** (only if needed)
-
-**For Podcasting/Voice:**
-- ✅ Use **Balanced Mode** (compression helps)
-- 🎧 Any headphones work fine
-- 🔊 **70-90% volume** is typical
-- ⚡ **Boost** can help quiet voices
+**Pro Tips:**
+- Use wired headphones for lowest latency
+- Enable Ultra-Low Latency Mode for music/singing  
+- Watch the pitch indicator to stay in tune
+- Keep volume around 50-70% for comfortable monitoring
 
 ---
 
-## 📖 User Guide
+## 💻 For Developers
 
-### Understanding the Interface
+### Clone and Run Locally
 
-#### Main Controls
-- **🎤 Microphone Button** - Large circular button toggles monitoring on/off
-- **🔊 Volume Slider** - Controls how loud you hear yourself (0-100%)
-- **⚡ Boost Slider** - Adds extra amplification (0-300% additional gain)
-- **⚙️ Latency Toggle** - Switch between ultra-low latency and balanced modes
-- **🎧 Device Selector** - Choose which microphone to use
+```bash
+git clone https://github.com/JustLikeFrank3/LiveVox.git
+cd LiveVox
+npm install
+npm run dev
+```
 
-#### Visual Displays
-- **Waveform** - Real-time oscilloscope showing audio signal shape
-- **Level Meter** - Horizontal bar showing input volume (green → yellow → red)
-- **Pitch Indicator** - Shows detected musical note and tuning accuracy
-- **Latency Badge** - Displays current audio delay in milliseconds
-- **Clipping Warning** - Red "CLIPPING" badge appears when signal is too hot
+Open `http://localhost:5000` to see it running locally.
 
-### Tips for Best Results
+### Project Structure
 
-#### Avoiding Feedback
-⚠️ **Always use headphones!** Using speakers will create a feedback loop.
-
-#### Optimal Distance
-- 🎤 Position yourself **6-12 inches** from the microphone
-- 💨 Use a **pop filter** or angle mic to avoid plosives (P, B, T sounds)
-- 📊 Watch the level meter - aim for **60-80%** on loud parts
-
-#### Reducing Latency
-- ✅ Use **wired headphones** (Bluetooth adds 100-300ms delay)
-- ✅ Enable **Ultra-Low Latency Mode**
-- ✅ Close **other audio applications**
-- ✅ Use **Chrome or Edge** browser (best Web Audio API support)
-
-#### Using the Pitch Indicator
-- 🎵 **Center line** = perfect pitch
-- 🔵 **Left of center** = flat (sing higher)
-- 🟡 **Right of center** = sharp (sing lower)
-- 🟢 **Green "In Tune" badge** = within ±15 cents (excellent!)
-- The **cents number** shows exact deviation from perfect pitch
-
-#### Managing Clipping
-If you see the **red CLIPPING warning**:
-1. **Reduce boost** slider (try 0% first)
-2. Move **further from microphone**
-3. **Lower volume** slider
-4. Enable **Balanced Mode** (adds compression protection)
+```
+src/
+├── App.tsx                    # Main application logic
+├── components/
+│   ├── AudioLevelMeter.tsx   # Volume meter with clipping detection
+│   ├── Waveform.tsx           # Real-time waveform visualization
+│   ├── PitchIndicator.tsx    # Pitch detection and tuning display
+│   └── ui/                    # Shadcn UI components
+```
 
 ---
 
-## 🛠️ Technical Details
+## 🤝 Contributing & Feedback
 
-### Technology Stack
+Found a bug or have a feature idea? Feel free to open an issue!
+
+This project demonstrates what's possible with GitHub Spark - if it inspires you to build something, I'd love to hear about it!
+
+---
+
+## 📄 License
+
+MIT License - See [LICENSE](./LICENSE) for details.
+
+---
+
+<div align="center">
+
+**⚡ Built with [GitHub Spark](https://githubnext.com/projects/github-spark) in ~1 hour**
+
+*If you enjoyed this project, give it a ⭐ on GitHub!*
+
+[Try LiveVox Live](https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/) • [View Source](https://github.com/JustLikeFrank3/LiveVox)
+
+</div>
+
 
 **Frontend Framework:**
 - React 19.2 with TypeScript 5.7
@@ -212,7 +197,35 @@ If you see the **red CLIPPING warning**:
 - IBM Plex Serif (headings)
 - Fira Code (monospace)
 
-### Browser Compatibility
+---
+
+## 🎯 Use Cases
+
+### 🎤 Singers & Vocalists
+- Practice pitch accuracy with real-time visual feedback
+- Monitor your voice with <10ms latency for natural feel
+- Use pitch indicator to train your ear and improve intonation
+
+### 🎙️ Podcasters & Streamers
+- Monitor audio quality during recording sessions
+- Ensure consistent volume with dynamic compression
+- Catch issues before they ruin your take
+
+### 🎸 Musicians
+- Monitor acoustic instruments through headphones
+- Practice with backing tracks while hearing yourself clearly
+- Use pitch detection for tuning and intonation
+
+---
+
+## 🌐 Try It Yourself
+
+### Live Demo
+**🔗 [Launch LiveVox](https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/)**
+
+No installation required - just click and start using it!
+
+### Quick Start Guide
 
 ✅ **Fully Supported:**
 - Chrome 90+ (recommended)

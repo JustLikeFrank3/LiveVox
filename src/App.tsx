@@ -81,11 +81,13 @@ function App() {
       const devices = await navigator.mediaDevices.enumerateDevices()
       const audioInputs = devices.filter(device => device.kind === 'audioinput')
       
-      const deviceList: AudioDevice[] = audioInputs.map(device => ({
-        deviceId: device.deviceId,
-        label: device.label || `Microphone ${audioInputs.indexOf(device) + 1}`,
-        kind: device.kind
-      }))
+      const deviceList: AudioDevice[] = audioInputs
+        .filter(device => device.deviceId) // Filter out devices with empty deviceId
+        .map(device => ({
+          deviceId: device.deviceId,
+          label: device.label || `Microphone ${audioInputs.indexOf(device) + 1}`,
+          kind: device.kind
+        }))
       
       setAvailableDevices(deviceList)
       
@@ -506,11 +508,13 @@ function App() {
                           No microphones found
                         </SelectItem>
                       ) : (
-                        availableDevices.map((device) => (
-                          <SelectItem key={device.deviceId} value={device.deviceId}>
-                            {device.label}
-                          </SelectItem>
-                        ))
+                        availableDevices
+                          .filter(device => device.deviceId) // Extra safety check
+                          .map((device) => (
+                            <SelectItem key={device.deviceId} value={device.deviceId}>
+                              {device.label}
+                            </SelectItem>
+                          ))
                       )}
                     </SelectContent>
                   </Select>
