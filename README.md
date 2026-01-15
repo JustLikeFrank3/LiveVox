@@ -6,6 +6,8 @@
 
 *Perfect for singers, podcasters, musicians, and anyone who needs to monitor their voice through headphones*
 
+### 🌐 [**Try it Live!**](https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/)
+
 [![Built with React](https://img.shields.io/badge/React-19.2-61dafb?style=flat&logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Web Audio API](https://img.shields.io/badge/Web%20Audio%20API-enabled-ff6b6b?style=flat)](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
@@ -96,7 +98,7 @@
 
 ### Quick Start
 
-1. **Open the application** in your web browser
+1. **[Open the application](https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/)** in your web browser
 2. **Connect headphones** (important to prevent feedback!)
 3. **Click the microphone button** to start monitoring
 4. **Allow microphone access** when your browser prompts you
@@ -248,20 +250,23 @@ If you see the **red CLIPPING warning**:
 
 ## 🌐 Sharing Your App
 
-### Deployment
+### Live Deployment
 
-This application is built as a **GitHub Spark** and is automatically hosted! 
+This Audio Monitor app is live and ready to share! 🎉
+
+**🔗 Live URL:** https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/
 
 **Your app has:**
 - ✅ A unique shareable URL
 - ✅ Automatic HTTPS encryption
 - ✅ Global CDN delivery
 - ✅ Zero configuration required
+- ✅ Works on any device with a modern browser
 
 ### Sharing Options
 
 #### 🔗 Share the Live URL
-1. Copy your Spark's unique URL
+1. Copy your Spark's URL: `https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/`
 2. Share it with anyone - they can use it immediately
 3. No installation or setup required for users
 4. Works on any device with a modern browser
