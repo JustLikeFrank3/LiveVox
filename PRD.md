@@ -164,3 +164,39 @@ Animations should feel responsive and purposeful, like physical studio equipment
   - Slider thumb enlarged to 24px for easier manipulation
   - Full-width card on mobile, centered with max width on desktop
   - Larger text sizes on mobile (16px base to prevent zoom on input focus)
+
+## Sharing and Deployment
+
+### Live URL Options
+The application supports two types of URLs:
+
+1. **Default Spark URL**: `https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/`
+   - Automatically provided by GitHub Spark
+   - Zero configuration required
+   - Immediate availability
+   - Free HTTPS and CDN
+
+2. **Custom Domain** (Optional): `https://livevox.yourdomain.com`
+   - Professional branded URLs
+   - Better memorability and trust
+   - Improved SEO and analytics
+   - Cleaner appearance in marketing materials
+   - Shows your domain in social media previews
+
+### Custom Domain Setup
+For users who want a branded sharing URL, comprehensive documentation is provided:
+- **CUSTOM-DOMAIN.md**: Complete setup guide with step-by-step instructions for all major DNS providers (Cloudflare, Namecheap, GoDaddy, Route 53, etc.)
+- **CUSTOM-DOMAIN-QUICKSTART.md**: One-page quick reference cheat sheet with copy-paste ready DNS configurations
+
+The setup process involves:
+1. Configuring a CNAME record to point to `spark.github.com`
+2. Waiting for DNS propagation (typically 1-2 hours)
+3. Configuring the custom domain in Spark settings
+4. Automatic SSL certificate provisioning
+
+### Social Media Integration
+The application includes optimized Open Graph and Twitter Card metadata for rich link previews:
+- Custom branded preview image (`og-image.svg`) showing app interface
+- Descriptive title and metadata
+- Optimized dimensions (1200×630px) for all major platforms
+- Works with both default and custom domain URLs

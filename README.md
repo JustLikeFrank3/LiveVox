@@ -254,7 +254,7 @@ If you see the **red CLIPPING warning**:
 
 This LiveVox app is live and ready to share! 🎉
 
-**🔗 Live URL:** https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/
+**🔗 Default URL:** https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/
 
 **Your app has:**
 - ✅ A unique shareable URL
@@ -264,25 +264,115 @@ This LiveVox app is live and ready to share! 🎉
 - ✅ Works on any device with a modern browser
 - ✅ Beautiful social media preview cards (Open Graph & Twitter Cards)
 
+---
+
+### 🎨 Custom Branded URLs (Optional)
+
+Transform your sharing experience with a professional custom domain!
+
+<table>
+<tr>
+<td width="50%">
+
+**❌ Before (Default)**
+```
+spark.github.com/
+  92ccfd0a-d09b-4142-a2a8-
+  9513b5d5ef2a/
+```
+- Hard to remember
+- Generic appearance
+- Long and technical
+- Not portfolio-ready
+
+</td>
+<td width="50%">
+
+**✅ After (Custom)**
+```
+livevox.yourname.com
+```
+- Professional branding
+- Easy to remember
+- Clean and concise
+- Portfolio-ready
+
+</td>
+</tr>
+</table>
+
+**Popular domain patterns:**
+- `livevox.yourname.com` - Personal portfolio
+- `voice.yourstudio.com` - Business/studio
+- `livevox.app` - Dedicated product
+
+**Benefits:**
+- ✅ **Professional appearance** - Perfect for resumes and portfolios
+- ✅ **Brand recognition** - Your domain in social media previews
+- ✅ **Easy to share** - Verbally or in writing
+- ✅ **Better SEO** - Custom domains rank better
+- ✅ **Analytics ready** - Track with your own domain
+- ✅ **Free SSL** - Automatic HTTPS certificate
+
+**📖 Complete Documentation:**
+- **[Setup Guide](./CUSTOM-DOMAIN.md)** - Step-by-step for all DNS providers (Cloudflare, Namecheap, GoDaddy, Route 53, etc.)
+- **[Quick Start](./CUSTOM-DOMAIN-QUICKSTART.md)** - One-page cheat sheet with copy-paste configs
+- **[Examples & Ideas](./CUSTOM-DOMAIN-EXAMPLES.md)** - Domain naming patterns and real-world use cases
+
+**⚡ Quick Setup:** Add a CNAME record → Wait 1-2 hours → Configure in Spark → Done!
+
+---
+
 ### Social Media Sharing
 
-When you share the LiveVox URL on social media platforms (Twitter, Facebook, LinkedIn, Discord, Slack, etc.), a rich preview card will automatically appear with:
+When you share your LiveVox URL (default or custom) on social media, a rich preview card automatically appears with:
 - 🎨 Custom branded preview image
-- 📝 App title and description
+- 📝 App title and description  
 - 🎤 Visual elements showing audio waveform and key features
 
-The preview image is optimized for:
-- **Facebook/LinkedIn:** 1200×630px
+Optimized for all major platforms:
+- **Facebook/LinkedIn:** 1200×630px preview
 - **Twitter Cards:** Large image format
 - **Discord/Slack:** Rich embed previews
+
+**Test your preview:**
+- [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)
+- [Twitter Card Validator](https://cards-dev.twitter.com/validator)
+- [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/)
+
+---
 
 ### Sharing Options
 
 #### 🔗 Share the Live URL
-1. Copy your Spark's URL: `https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/`
+
+**Current URLs:**
+```
+Default Spark URL:
+https://spark.github.com/92ccfd0a-d09b-4142-a2a8-9513b5d5ef2a/
+
+Custom Domain (optional):
+https://livevox.yourdomain.com
+```
+
+**How to share:**
+1. Copy your URL (default or custom)
 2. Share it with anyone - they can use it immediately
 3. No installation or setup required for users
 4. Works on any device with a modern browser
+
+**Where to share:**
+- Social media (Twitter, Facebook, LinkedIn)
+- Messaging apps (Discord, Slack, WhatsApp)
+- Email signatures
+- Portfolio websites
+- QR codes for in-person sharing
+- Business cards
+
+**📖 Custom Domain Documentation:**
+- **[Setup Guide](./CUSTOM-DOMAIN.md)** - Complete instructions for all DNS providers
+- **[Quick Start](./CUSTOM-DOMAIN-QUICKSTART.md)** - One-page cheat sheet
+- **[Examples](./CUSTOM-DOMAIN-EXAMPLES.md)** - Domain naming ideas and use cases
 
 #### 📂 Make Repository Public
 To let others see and fork your code:
@@ -290,9 +380,6 @@ To let others see and fork your code:
 2. Scroll to the **"Danger Zone"** section
 3. Click **"Change visibility"** → **"Public"**
 4. Others can now view, fork, star, and contribute!
-
-#### 🌍 Custom Domain (Optional)
-You can add a custom domain through GitHub Spark settings for a branded URL like `livevox.yourdomain.com`
 
 ---
 
