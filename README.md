@@ -2,6 +2,32 @@
 
 A professional-grade audio monitoring application that lets you hear yourself in real-time with ultra-low latency. Perfect for singers, podcasters, musicians, and anyone who needs to monitor their voice or instrument through headphones.
 
+## 📸 Screenshots
+
+![Audio Monitor Interface](./screenshots/audio-monitor-main.png)
+*Main interface showing real-time waveform, pitch indicator, and audio controls*
+
+![Pitch Indicator Demo](./screenshots/pitch-indicator.gif)
+*Live pitch detection helping you stay in tune while singing*
+
+> **📝 To replace these placeholders with real screenshots:**
+> 
+> The `screenshots/` folder has been created with placeholder images. Follow these steps to add your actual screenshots:
+> 
+> 1. **Run your application** and open it in your browser
+> 2. **Take screenshots** of the app in action:
+>    - Main interface with monitoring active
+>    - Pitch indicator responding to your voice
+>    - Waveform visualization
+> 3. **For animated GIFs**, use screen recording tools:
+>    - [ScreenToGif](https://www.screentogif.com/) (Windows)
+>    - [Kap](https://getkap.co/) (macOS)
+>    - [Peek](https://github.com/phw/peek) (Linux)
+> 4. **Save your images** to the `screenshots/` folder with the same filenames
+> 5. **Commit and push** to update your repository
+> 
+> See [`screenshots/README.md`](./screenshots/README.md) for detailed instructions and tips!
+
 ## ✨ Features
 
 - **Real-time audio passthrough** with minimal latency

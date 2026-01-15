@@ -1,0 +1,23 @@
+<svg width="600" height="200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:oklch(0.98 0.005 140);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:oklch(0.92 0.02 140);stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="600" height="200" fill="url(#bg-grad)"/>
+  
+  <rect x="30" y="30" width="540" height="140" rx="6" fill="oklch(0.96 0.008 140)" stroke="oklch(0.85 0.05 140)" stroke-width="2"/>
+  
+  <circle cx="300" cy="80" r="25" fill="oklch(0.45 0.15 120)" opacity="0.3"/>
+  <path d="M 300 65 Q 310 75 300 85 Q 290 75 300 65" fill="oklch(0.45 0.15 120)" opacity="0.6"/>
+  
+  <text x="300" y="125" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="oklch(0.20 0.12 140)" text-anchor="middle">
+    Pitch Indicator Animation GIF
+  </text>
+  
+  <text x="300" y="150" font-family="Arial, sans-serif" font-size="13" fill="oklch(0.45 0.08 140)" text-anchor="middle">
+    Record a GIF showing the pitch indicator responding to voice
+  </text>
+</svg>
