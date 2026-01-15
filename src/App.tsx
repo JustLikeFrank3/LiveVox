@@ -11,8 +11,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useKV } from '@github/spark/hooks'
 import AudioLevelMeter from '@/components/AudioLevelMeter'
 import Waveform from '@/components/Waveform'
-import PitchIndicator from '@/components/PitchIndicator'
-import FrequencySpectrum from '@/components/FrequencySpectrum'
 
 type PermissionState = 'prompt' | 'granted' | 'denied' | 'error'
 
@@ -463,9 +461,7 @@ function App() {
                   className="mb-6 space-y-6"
                 >
                   <Waveform analyser={analyserRef.current} isActive={isMonitoring} />
-                  <FrequencySpectrum analyser={analyserRef.current} isActive={isMonitoring} />
                   <AudioLevelMeter level={audioLevel} />
-                  <PitchIndicator analyser={analyserRef.current} isActive={isMonitoring} />
                 </motion.div>
               )}
 
