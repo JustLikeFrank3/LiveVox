@@ -44,6 +44,7 @@ function App() {
   const gainNodeRef = useRef<GainNode | null>(null)
   const boostNodeRef = useRef<GainNode | null>(null)
   const analyserRef = useRef<AnalyserNode | null>(null)
+  const compressorRef = useRef<DynamicsCompressorNode | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const animationFrameRef = useRef<number | null>(null)
 
@@ -109,11 +110,11 @@ function App() {
     }
   }
 
-  const startMonitoring = async () => {
+  const startMonitoring = async (explicitDeviceId?: string) => {
     try {
       await loadAvailableDevices()
       
-      const deviceId = selectedDeviceId || undefined
+      const deviceId = explicitDeviceId || selectedDeviceId || undefined
 
       const audioConstraints = lowLatencyMode ? {
         deviceId: deviceId ? { exact: deviceId } : undefined,
@@ -184,7 +185,7 @@ function App() {
         source.connect(boostNode)
         boostNode.connect(gainNode)
         gainNode.connect(analyser)
-        analyser.connect(audioContext.destination)
+        gainNode.connect(audioContext.destination)
       } else {
         const compressor = audioContext.createDynamicsCompressor()
         compressor.threshold.value = -24
@@ -192,12 +193,13 @@ function App() {
         compressor.ratio.value = 12
         compressor.attack.value = 0.003
         compressor.release.value = 0.25
+        compressorRef.current = compressor
 
         source.connect(boostNode)
         boostNode.connect(gainNode)
         gainNode.connect(compressor)
         compressor.connect(analyser)
-        analyser.connect(audioContext.destination)
+        compressor.connect(audioContext.destination)
       }
 
       setIsMonitoring(true)
@@ -309,8 +311,8 @@ function App() {
     if (isMonitoring) {
       stopMonitoring()
       setTimeout(() => {
-        startMonitoring()
-      }, 100)
+        startMonitoring(deviceId)
+      }, 200)
     }
   }
 
@@ -531,7 +533,6 @@ function App() {
                       onValueChange={setVolume}
                       max={100}
                       step={1}
-                      disabled={!isMonitoring}
                       className="cursor-pointer"
                     />
                   </div>
@@ -560,7 +561,6 @@ function App() {
                       onValueChange={setBoost}
                       max={100}
                       step={5}
-                      disabled={!isMonitoring}
                       className="cursor-pointer"
                     />
                   </div>
