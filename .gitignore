@@ -32,3 +32,10 @@ pids
 .devcontainer/
 
 .spark-workbench-id
+
+# React Native / Expo
+.expo/
+app.json
+ios/
+android/
+LiveVoxNative/
