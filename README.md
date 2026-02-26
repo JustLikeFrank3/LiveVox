@@ -22,6 +22,14 @@
 
 ---
 
+## Why
+
+I used to bartend in South Beach and ride a fixed gear bike everywhere with over-ear headphones, because I was very cool. I'd pull up somewhere mid-song, singing along full volume, completely unaware of how loud I was because I couldn't hear myself at all. One too many times I got off that bike sounding like a jackass and thought -- why can't you just feed the microphone into the headphone mix so you can hear your own voice?
+
+That's why this exists. Mic monitoring with independent volume control, mixed in with whatever's already playing -- Apple Music, Spotify, anything. Turns out solving it properly gets interesting fast.
+
+---
+
 ## 🎯 What is LiveVox?
 
 LiveVox is a **professional-grade audio monitoring tool** that runs entirely in your web browser. It lets you hear your voice through headphones with **ultra-low latency** (<10ms on supported devices), along with real-time pitch detection, waveform visualization, and dynamic audio processing.
